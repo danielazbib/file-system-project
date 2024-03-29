@@ -1,6 +1,8 @@
 from linkedList import LinkedList
 from queue_1 import Queue
 from stack import Stack
+from binarytree import BinarySearchTree
+
 class Directory:
     def __init__(self, name):
         self.name = name
@@ -8,13 +10,27 @@ class Directory:
         self.subdirectories = []
         self.file_queue = Queue()  #initialize file_queue for each directory
         self.undo_stack = Stack()  #initialize Stack for undoing file operations
+        self.file_bst = BinarySearchTree()  #initialize BST for file search
 
 
     #method to create a file
     def create_file(self, name, size):
          # add files to linkedList File 
         self.files.append(name, size)
-        self.undo_stack.push(("create_file", name))  
+        self.file_bst.insert(name, {"size": size})  # Insert file into BST
+
+    def search_file(self, name):
+        return self.file_bst.search(name)
+    
+    def enqueue_file_move(self, file_to_move, destination_directory):
+        self.file_queue.enqueue((file_to_move, destination_directory))
+
+    def execute_file_moves(self):
+        while not self.file_queue.is_empty():
+            file_to_move, destination_directory = self.file_queue.dequeue()
+            destination_directory.files.append(file_to_move.name, file_to_move.size)
+            self.files.remove(file_to_move)
+            print(f"File '{file_to_move.name}' moved to '{destination_directory.name}' successfully.")    
     #method to display contents
     def display_contents(self, indent=""):
         print(f"{indent}Contents of {self.name}:")
@@ -114,4 +130,17 @@ class Directory:
         else:
             print("Nothing to undo.")
             
-        
+    def rename_file(self, old_name, new_name):
+        file_to_rename = None
+        current = self.files.head
+        while current:
+            if current.name == old_name:
+                file_to_rename = current
+                break
+            current = current.next
+
+        if file_to_rename:
+            file_to_rename.name = new_name
+            print(f"File '{old_name}' renamed to '{new_name}' successfully.")
+        else:
+            print(f"File '{old_name}' not found.")

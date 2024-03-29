@@ -12,7 +12,7 @@ class LinkedList:
             while current.next:
                 current = current.next
             current.next = new_file
-    # function to remove node by name                                       
+
     def remove(self, file_to_remove):
         current = self.head
         prev = None
@@ -26,9 +26,15 @@ class LinkedList:
                 return
             prev = current
             current = current.next
+
     def display(self, indent=""):
         current = self.head
         while current:
             print(f"{indent}File: {current.name}, Size: {current.size}")
-            current = current.next     
-                     
+            current = current.next
+
+    def __iter__(self):
+        current = self.head
+        while current:
+            yield current
+            current = current.next
