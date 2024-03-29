@@ -6,7 +6,7 @@ class Directory:
         self.name = name
         self.files = LinkedList()
         self.subdirectories = []
-        self.file_queue = Queue()  # Initialize file_queue for each directory
+        self.file_queue = Queue()  #initialize file_queue for each directory
 
     #method to create a file
     def create_file(self, name, size):
@@ -15,10 +15,10 @@ class Directory:
     #method to display contents
     def display_contents(self, indent=""):
         print(f"{indent}Contents of {self.name}:")
-        self.files.display(indent + "  ")  # Display files in the current directory
+        self.files.display(indent + "  ")  #display files in the current directory
 
         for subdir in self.subdirectories:
-            subdir.display_contents(indent + "  ")  # Recursively display contents of subdirectories
+            subdir.display_contents(indent + "  ")  #recursively display contents of subdirectories
 
     #method for creating subdirectories
     def create_subdirectory(self, name):
