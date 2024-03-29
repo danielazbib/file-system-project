@@ -49,11 +49,11 @@ class LinkedList:
                 return
             prev = current
             current = current.next
-    def display(self):
+    def display(self, indent=""):
         current = self.head
         while current:
-            print(f"File: {current.name}, Size: {current.size}")
-            current = current.next       
+            print(f"{indent}File: {current.name}, Size: {current.size}")
+            current = current.next     
 class File:
     def __init__(self, name, size):
         self.name = name
@@ -71,12 +71,12 @@ class Directory:
          # add files to linkedList File 
         self.files.append(name, size)  
     #method to display contents
-    def display_contents(self):
-        print("Files in", self.name + ":")
-        self.files.display()
-        print("Subdirectories:")
+    def display_contents(self, indent=""):
+        print(f"{indent}Contents of {self.name}:")
+        self.files.display(indent + "  ")  # Display files in the current directory
+
         for subdir in self.subdirectories:
-            print(subdir.name)
+            subdir.display_contents(indent + "  ")  # Recursively display contents of subdirectories
 
     #method for creating subdirectories
     def create_subdirectory(self, name):
@@ -117,12 +117,19 @@ class Directory:
 
             if destination_directory:
                 destination_directory.files.append(file_to_move.name, file_to_move.size)
-                self.files.remove(file_to_move)
+                self.files.remove(file_to_move)  #removes the file from the current directory
                 print(f"File '{file_name}' moved to '{destination_directory_name}' successfully.")
             else:
                 print(f"Destination directory '{destination_directory_name}' not found.")
         else:
-            print(f"File '{file_name}' not found.")
+            print(f"File '{file_name}' not found.")   
+
+    def execute_file_moves(self):
+        while not self.file_queue.is_empty():
+            file_to_move, destination_directory = self.file_queue.dequeue()
+            destination_directory.files.append(file_to_move.name, file_to_move.size)
+            self.files.remove(file_to_move)
+            print(f"File '{file_to_move.name}' moved to '{destination_directory.name}' successfully.")
                                  
 
 def main():
